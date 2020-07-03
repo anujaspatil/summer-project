@@ -16,11 +16,14 @@ with sr.Microphone() as source:
 import pyaudio
 import speech_recognition as sr
 import webbrowser as wb
+import subprocess
 
 r1 = sr.Recognizer()
 r2 = sr.Recognizer()
 r3 = sr.Recognizer()
 r4 = sr.Recognizer()
+r5 = sr.Recognizer()
+r6 = sr.Recognizer()
 
 with sr.Microphone() as source:
     print('What do you want me to do?')
@@ -63,7 +66,7 @@ if 'Gmail' in r4.recognize_google(audio):
     r4 = sr.Recognizer()
     url = 'https://www.gmail.com/'
     with sr.Microphone() as source:
-        print ('Gmail is opening')
+        print('Gmail is opening')
         audio = r4.listen(source)
 
         try:
@@ -73,3 +76,28 @@ if 'Gmail' in r4.recognize_google(audio):
         except sr.RequestError as e:
             print('failed'.format(e))
 
+if 'notepad' in r5.recognize_google(audio):
+    r5 = sr.Recognizer()
+    with sr.Microphone() as source:
+        print('Notepad is opening')
+        audio = r5.listen(source)
+
+        try:
+            subprocess.call('notepad.exe')
+        except sr.UnknownValueError:
+            print(error)
+        except sr.RequestError as e:
+            print('failed'.format(e))
+
+if 'calculator' in r6.recognize_google(audio):
+    r6 = sr.Recognizer()
+    with sr.Microphone() as source:
+        print('Calculator is opening')
+        audio = r6.listen(source)
+
+        try:
+            subprocess.call('calc.exe')
+        except sr.UnknownValueError:
+            print(error)
+        except sr.RequestError as e:
+            print('failed'.format(e))
