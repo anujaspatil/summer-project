@@ -20,10 +20,11 @@ import webbrowser as wb
 r1 = sr.Recognizer()
 r2 = sr.Recognizer()
 r3 = sr.Recognizer()
+r4 = sr.Recognizer()
 
 with sr.Microphone() as source:
-    print('[search edureka: search youtube]')
-    print('speak now')
+    print('What do you want me to do?')
+    print('Start speaking')
     audio = r1.listen(source)
 
 if 'edureka' in r2.recognize_google(audio):
@@ -57,3 +58,18 @@ if 'YouTube' in r3.recognize_google(audio):
             print(error)
         except sr.RequestError as e:
             print('failed'.format(e))
+
+if 'Gmail' in r4.recognize_google(audio):
+    r4 = sr.Recognizer()
+    url = 'https://www.gmail.com/'
+    with sr.Microphone() as source:
+        print ('Gmail is opening')
+        audio = r4.listen(source)
+
+        try:
+            wb.get().open_new(url)
+        except sr.UnknownValueError:
+            print(error)
+        except sr.RequestError as e:
+            print('failed'.format(e))
+
