@@ -24,15 +24,16 @@ r3 = sr.Recognizer()
 r4 = sr.Recognizer()
 r5 = sr.Recognizer()
 r6 = sr.Recognizer()
+r7 = sr.Recognizer()
 
 with sr.Microphone() as source:
     print('What do you want me to do?')
     print('Start speaking')
     audio = r1.listen(source)
 
-if 'edureka' in r2.recognize_google(audio):
+if 'Google' in r2.recognize_google(audio):
     r2 = sr.Recognizer()
-    url = 'https://www.edureka.co/'
+    url = 'https://www.google.com/search?q='
     with sr.Microphone() as source:
         print('search your query')
         audio = r2.listen(source)
@@ -100,4 +101,17 @@ if 'calculator' in r6.recognize_google(audio):
         except sr.UnknownValueError:
             print(error)
         except sr.RequestError as e:
+            print('failed'.format(e))
+
+if 'paint' in r7.recognize_google(audio):
+    r7 = sr.Recognizer()
+    with sr.Microphone() as source:
+        print('Paint is opening')
+        audio = r7.listen(source)
+
+        try:
+            subprocess.call('mspaint.exe')
+        except sr.UnknownValueError:
+            print(error)
+        except  sr.RequestError as e:
             print('failed'.format(e))
