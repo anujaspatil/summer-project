@@ -113,5 +113,5 @@ if 'paint' in r7.recognize_google(audio):
             subprocess.call('mspaint.exe')
         except sr.UnknownValueError:
             print(error)
-        except  sr.RequestError as e:
+        except sr.RequestError as e:
             print('failed'.format(e))
