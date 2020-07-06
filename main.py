@@ -17,101 +17,70 @@ import pyaudio
 import speech_recognition as sr
 import webbrowser as wb
 import subprocess
+from time import ctime
+import time
+import os
+import playsound
+from gtts import gTTS
+import random
 
-r1 = sr.Recognizer()
-r2 = sr.Recognizer()
-r3 = sr.Recognizer()
-r4 = sr.Recognizer()
-r5 = sr.Recognizer()
-r6 = sr.Recognizer()
-r7 = sr.Recognizer()
+r = sr.Recognizer()
 
-with sr.Microphone() as source:
-    print('What do you want me to do?')
-    print('Start speaking')
-    audio = r1.listen(source)
-
-if 'Google' in r2.recognize_google(audio):
-    r2 = sr.Recognizer()
-    url = 'https://www.google.com/search?q='
+def record_audio(ask = False):
     with sr.Microphone() as source:
-        print('search your query')
-        audio = r2.listen(source)
-
+        if ask:
+            odin_speak(ask)
+        audio = r.listen(source)
+        voice_data = ''
         try:
-            get = r2.recognize_google(audio)
-            print(get)
-            wb.get().open_new(url+get)
+            voice_data = r.recognize_google(audio)
+            print(voice_data)
         except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
+            odin_speak('Sorry I did not get it')
+        except sr.RequestError:
+            odin_speak('Sorry my service is down')
+        return voice_data
 
-if 'YouTube' in r3.recognize_google(audio):
-    r3 = sr.Recognizer()
-    url = 'https://www.youtube.com/results?search_query='
-    with sr.Microphone() as source:
-        print('search your query')
-        audio = r3.listen(source)
+def odin_speak(audio_string):
+    tts = gTTS(text=audio_string, lang='en')
+    r = random.randint(1, 10000000)
+    audio_file = 'audio-' + str(r) + '.mp3'
+    tts.save(audio_file)
+    print(audio_string)
+    playsound.playsound(audio_file)
+    os.remove(audio_file)
 
-        try:
-            get = r3.recognize_google(audio)
-            print(get)
-            wb.get().open_new(url+get)
-        except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
+def respond(voice_data):
+    if 'time' in voice_data:
+        odin_speak(ctime())
+    if 'Google' in voice_data:
+        odin_speak('Your search result is ready')
+        search = record_audio('What do you want to search')
+        url = 'https://www.google.com/search?q='
+        wb.get().open_new(url + search)
+    if 'YouTube' in voice_data:
+        odin_speak('Here is what I found')
+        search = record_audio('What do you want to watch')
+        url = 'https://www.youtube.com/results?search_query='
+        wb.get().open_new(url + search)
+    if 'Gmail' in voice_data:
+        odin_speak('Opening Gmail')
+        url = 'https://www.gmail.com/'
+        wb.get().open_new(url)
+    if 'Notepad' in voice_data:
+        odin_speak('Opening notepad')
+        subprocess.call('notepad.exe')
+    if 'calculator' in voice_data:
+        odin_speak('Opening calculator')
+        subprocess.call('calc.exe')
+    if 'Paint' in voice_data:
+        odin_speak('Opening paint')
+        subprocess.call('mspaint.exe')
+    if 'exit' in voice_data:
+        exit()
 
-if 'Gmail' in r4.recognize_google(audio):
-    r4 = sr.Recognizer()
-    url = 'https://www.gmail.com/'
-    with sr.Microphone() as source:
-        print('Gmail is opening')
-        audio = r4.listen(source)
-
-        try:
-            wb.get().open_new(url)
-        except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
-
-if 'notepad' in r5.recognize_google(audio):
-    r5 = sr.Recognizer()
-    with sr.Microphone() as source:
-        print('Notepad is opening')
-        audio = r5.listen(source)
-
-        try:
-            subprocess.call('notepad.exe')
-        except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
-
-if 'calculator' in r6.recognize_google(audio):
-    r6 = sr.Recognizer()
-    with sr.Microphone() as source:
-        print('Calculator is opening')
-        audio = r6.listen(source)
-
-        try:
-            subprocess.call('calc.exe')
-        except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
-
-if 'paint' in r7.recognize_google(audio):
-    r7 = sr.Recognizer()
-    with sr.Microphone() as source:
-        print('Paint is opening')
-        audio = r7.listen(source)
-
-        try:
-            subprocess.call('mspaint.exe')
-        except sr.UnknownValueError:
-            print(error)
-        except sr.RequestError as e:
-            print('failed'.format(e))
+time.sleep(1)
+odin_speak('Hey this is Odin, your personal virtual assistant. How can I help you?')
+while 1:
+    voice_data = record_audio()
+    respond(voice_data)
