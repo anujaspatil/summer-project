@@ -48,7 +48,7 @@ class MySprite(pygame.sprite.Sprite):
                 user_talks = self.voice_data
                 talk1 = self.font_obj.render(user_talks, True, (0, 0, 0))
                 talk_pos1 = talk1.get_rect()
-                talk_pos1.center = ((275,250))
+                talk_pos1.center = ((230,280))
                 self.screen.blit(talk1, talk_pos1)
                 self.update()
                 pygame.display.update()
